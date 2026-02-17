@@ -2254,6 +2254,61 @@ footer {
 
 
 /* 
+
+*/
+
+/* ── Logo en el NAV ── */
+.logo img,
+nav .logo img {
+  height: 56px !important;  /* Más grande */
+  width: auto !important;
+  object-fit: contain !important;
+  
+  /* Opción 1: Si el logo tiene fondo negro sólido */
+  mix-blend-mode: screen !important;
+  
+  /* Opción 2: Filtro para mejorar contraste (descomenta si necesitas) */
+  /* filter: brightness(1.2) contrast(1.1) !important; */
+  
+  /* Opción 3: Si tiene partes negras que quieres hacer transparentes */
+  /* background: white !important;
+  padding: 0.3rem !important;
+  border-radius: 8px !important; */
+}
+
+/* ── Logo en el FOOTER ── */
+.footer-brand img,
+footer .footer-brand img {
+  height: 52px !important;
+  width: auto !important;
+  object-fit: contain !important;
+  
+  /* Para footer con fondo oscuro - invertir si es necesario */
+  filter: brightness(0) invert(1) !important;
+  /* O mantener original si queda bien */
+  /* filter: none !important; */
+}
+
+/* ── Logos de PROVEEDORES (Trust Bar) ── */
+.partner-logo,
+.trust-logos img {
+  height: 48px !important;  /* Más grandes */
+  width: auto !important;
+  object-fit: contain !important;
+  opacity: 0.6 !important;  /* Más visibles */
+  filter: grayscale(0.5) brightness(1.1) !important;  /* Menos gris */
+  transition: all 0.3s !important;
+}
+
+.partner-logo:hover,
+.trust-logos img:hover {
+  opacity: 1 !important;
+  filter: grayscale(0) brightness(1) !important;
+  transform: scale(1.08) !important;
+}
+
+
+/* 
 </style>
 
 <script>
