@@ -2255,25 +2255,19 @@ footer {
 
 /* 
 
-*/
-
 /* ── Logo en el NAV ── */
 .logo img,
 nav .logo img {
-  height: 56px !important;  /* Más grande */
+  height: 56px !important;
   width: auto !important;
   object-fit: contain !important;
-  
-  /* Opción 1: Si el logo tiene fondo negro sólido */
-  mix-blend-mode: screen !important;
-  
-  /* Opción 2: Filtro para mejorar contraste (descomenta si necesitas) */
-  /* filter: brightness(1.2) contrast(1.1) !important; */
-  
-  /* Opción 3: Si tiene partes negras que quieres hacer transparentes */
-  /* background: white !important;
-  padding: 0.3rem !important;
-  border-radius: 8px !important; */
+  background: white !important;
+  padding: 0.5rem 0.8rem !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  /* ELIMINAR estos filtros que causaron el problema */
+  mix-blend-mode: normal !important;
+  filter: none !important;
 }
 
 /* ── Logo en el FOOTER ── */
@@ -2282,21 +2276,17 @@ footer .footer-brand img {
   height: 52px !important;
   width: auto !important;
   object-fit: contain !important;
-  
-  /* Para footer con fondo oscuro - invertir si es necesario */
   filter: brightness(0) invert(1) !important;
-  /* O mantener original si queda bien */
-  /* filter: none !important; */
 }
 
-/* ── Logos de PROVEEDORES (Trust Bar) ── */
+/* ── Logos de PROVEEDORES ── */
 .partner-logo,
 .trust-logos img {
-  height: 48px !important;  /* Más grandes */
+  height: 48px !important;
   width: auto !important;
   object-fit: contain !important;
-  opacity: 0.6 !important;  /* Más visibles */
-  filter: grayscale(0.5) brightness(1.1) !important;  /* Menos gris */
+  opacity: 0.6 !important;
+  filter: grayscale(0.3) brightness(1.1) !important;
   transition: all 0.3s !important;
 }
 
@@ -2305,10 +2295,7 @@ footer .footer-brand img {
   opacity: 1 !important;
   filter: grayscale(0) brightness(1) !important;
   transform: scale(1.08) !important;
-}
 
-
-/* 
 </style>
 
 <script>
