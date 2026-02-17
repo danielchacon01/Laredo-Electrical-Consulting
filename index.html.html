@@ -2158,47 +2158,102 @@ footer {
 .animate {
   opacity: 1 !important;
 }
-/*
+*/
 .price-badge-live {
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
+  background: white !important;
   padding: 0.5rem 1rem !important;
   border-radius: 50px !important;
   font-weight: 600 !important;
-  box-shadow: 0 2px 8px rgba(102,126,234,0.3) !important;
-  border: none !important;
-  transition: all 0.3s !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  transition: all 0.4s ease !important;
 }
 
 .price-badge-live:hover {
   transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(102,126,234,0.4) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
 }
 
 .price-badge-live .price-icon {
   font-size: 1.1rem !important;
-  color: white !important;
   animation: pulse 2s ease-in-out infinite !important;
-  filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)) !important;
+  transition: color 0.4s ease !important;
 }
 
 .price-badge-live .price-value {
   font-size: 1.1rem !important;
   font-weight: 700 !important;
-  color: white !important;
   letter-spacing: -0.02em !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  transition: color 0.4s ease !important;
 }
 
 .price-badge-live .price-unit {
   font-size: 0.75rem !important;
   font-weight: 600 !important;
-  color: rgba(255,255,255,0.95) !important;
+  opacity: 0.85 !important;
+  transition: color 0.4s ease !important;
 }
-*/
+
+/* Estado: PRECIO BAJO (Verde) */
+.price-badge-live.price-low {
+  border: 1.5px solid #10B981 !important;
+  background: rgba(16, 185, 129, 0.05) !important;
+}
+
+.price-badge-live.price-low .price-icon,
+.price-badge-live.price-low .price-value {
+  color: #10B981 !important;
+}
+
+.price-badge-live.price-low .price-unit {
+  color: #059669 !important;
+}
+
+/* Estado: PRECIO MEDIO (Naranja) */
+.price-badge-live.price-medium {
+  border: 1.5px solid #F59E0B !important;
+  background: rgba(245, 158, 11, 0.05) !important;
+}
+
+.price-badge-live.price-medium .price-icon,
+.price-badge-live.price-medium .price-value {
+  color: #F59E0B !important;
+}
+
+.price-badge-live.price-medium .price-unit {
+  color: #D97706 !important;
+}
+
+/* Estado: PRECIO ALTO (Rojo) */
+.price-badge-live.price-high {
+  border: 1.5px solid #E50914 !important;
+  background: rgba(229, 9, 20, 0.05) !important;
+}
+
+.price-badge-live.price-high .price-icon,
+.price-badge-live.price-high .price-value {
+  color: #E50914 !important;
+}
+
+.price-badge-live.price-high .price-unit {
+  color: #B8070E !important;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.15); 
+    opacity: 0.85;
+  }
+}
+
+
+/* 
 </style>
 
 <script>
@@ -2366,18 +2421,19 @@ function resetCalculator() {
 }
 </script>
 <script>
-// CONTADOR DE PRECIO EN VIVO
 function getLivePriceTexas() {
   const now = new Date();
   const hour = now.getHours();
   
+  // Rangos de precios reales de Texas por horario (¢/kWh)
   const priceRanges = {
-    overnight: { min: 3.2, max: 5.8 },
-    morning: { min: 7.5, max: 11.2 },
-    afternoon: { min: 12.5, max: 18.9 },
-    evening: { min: 9.2, max: 14.5 }
+    overnight: { min: 3.2, max: 5.8 },   // 12am-6am (OFF-PEAK - MÁS BARATO)
+    morning: { min: 7.5, max: 11.2 },    // 6am-12pm (MEDIO)
+    afternoon: { min: 12.5, max: 18.9 }, // 12pm-6pm (PEAK - MÁS CARO)
+    evening: { min: 9.2, max: 14.5 }     // 6pm-12am (ALTO)
   };
   
+  // Determinar rango según hora actual
   let currentRange;
   if (hour >= 0 && hour < 6) {
     currentRange = priceRanges.overnight;
@@ -2389,53 +2445,82 @@ function getLivePriceTexas() {
     currentRange = priceRanges.evening;
   }
   
+  // Calcular precio base dentro del rango
   const rangeSpread = currentRange.max - currentRange.min;
   const basePrice = currentRange.min + (rangeSpread * Math.random());
+  
+  // Agregar fluctuación natural
   const fluctuation = (Math.random() - 0.5) * 0.3;
   const finalPrice = basePrice + fluctuation;
   
   return Math.max(0.1, finalPrice).toFixed(1);
 }
 
-function updateLivePrice() {
-  const priceElement = document.getElementById('livePrice');
+function getPriceLevel(price) {
+  // Determinar el nivel del precio y retornar la clase CSS
+  const priceNum = parseFloat(price);
   
-  if (priceElement) {
-    const newPrice = getLivePriceTexas();
-    const oldPrice = parseFloat(priceElement.textContent);
-    
-    priceElement.style.transition = 'transform 0.3s, color 0.3s';
-    
-    if (newPrice > oldPrice) {
-      priceElement.style.transform = 'scale(1.1)';
-      priceElement.style.color = '#FEF3C7';
-    } else if (newPrice < oldPrice) {
-      priceElement.style.transform = 'scale(1.1)';
-      priceElement.style.color = '#D1FAE5';
-    }
-    
-    setTimeout(() => {
-      priceElement.textContent = newPrice;
-    }, 150);
-    
-    setTimeout(() => {
-      priceElement.style.transform = 'scale(1)';
-      priceElement.style.color = 'white';
-    }, 300);
+  if (priceNum < 8) {
+    return 'price-low';      // Verde: Precio bajo (< 8¢/kWh)
+  } else if (priceNum < 13) {
+    return 'price-medium';   // Naranja: Precio medio (8-13¢/kWh)
+  } else {
+    return 'price-high';     // Rojo: Precio alto (> 13¢/kWh)
   }
 }
 
+function updateLivePrice() {
+  const priceElement = document.getElementById('livePrice');
+  const badgeElement = document.querySelector('.price-badge-live');
+  
+  if (priceElement && badgeElement) {
+    const newPrice = getLivePriceTexas();
+    const oldPrice = parseFloat(priceElement.textContent);
+    const priceLevel = getPriceLevel(newPrice);
+    
+    // Animación de cambio
+    priceElement.style.transition = 'transform 0.3s';
+    
+    if (newPrice !== oldPrice) {
+      priceElement.style.transform = 'scale(1.15)';
+    }
+    
+    // Actualizar valor
+    setTimeout(() => {
+      priceElement.textContent = newPrice;
+      
+      // Cambiar color según nivel de precio
+      badgeElement.classList.remove('price-low', 'price-medium', 'price-high');
+      badgeElement.classList.add(priceLevel);
+    }, 150);
+    
+    // Volver a estado normal
+    setTimeout(() => {
+      priceElement.style.transform = 'scale(1)';
+    }, 300);
+    
+    // Log para debugging (puedes eliminarlo)
+    const levelText = priceLevel === 'price-low' ? '🟢 BAJO' : 
+                      priceLevel === 'price-medium' ? '🟠 MEDIO' : '🔴 ALTO';
+    console.log(`💡 Precio: ${newPrice}¢/kWh - ${levelText}`);
+  }
+}
+
+// Inicializar al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
   updateLivePrice();
 });
 
+// Actualizar cada 5 segundos
 setInterval(updateLivePrice, 5000);
 
+// Actualizar cuando el usuario vuelve a la pestaña
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
     updateLivePrice();
   }
 });
+
 </script>
 
 
